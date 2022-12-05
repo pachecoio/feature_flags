@@ -1,0 +1,6 @@
+[submodule "backend"]
+	path = backend
+	url = git@github.com:pachecoio/feature_flags_service.git
+[submodule "frontend"]
+	path = frontend
+	url = git@github.com:pachecoio/feature_flags_app.git
