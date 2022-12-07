@@ -9,33 +9,39 @@ services:
       MONGO_INITDB_ROOT_USERNAME: root
       MONGO_INITDB_ROOT_PASSWORD: root
     networks:
-      - feature_flags_network
+      - feature-flags-network
 
-  backend:
+  feature-flags-service:
+    image: thisk8brd/feature-flags-service
+    container_name: feature-flags-service
     build: ./backend
     ports:
       - 8080:8080
     depends_on:
       - mongo
     environment:
-      MONGODB_URI: mongodb://root:root@mongo:27017
-      DATABASE_NAME: feature_flags
+      MONGODB_URI: ${MONGODB_URI}
+      DATABASE_NAME: ${DATABASE_NAME}
     volumes:
       - .:/usr/src/app
     networks:
-      - feature_flags_network
+      - feature-flags-network
 
-  frontend:
+  feature-flags-app:
+    image: thisk8brd/feature-flags-app
+    container_name: feature-flags-app
     build: ./frontend
     ports:
-      - 80:80
+      - 5173:80
     depends_on:
-      - backend
+      - feature-flags-service
     volumes:
       - ./frontend:/usr/src/app
+    environment:
+      VITE_API_URL: ${VITE_API_URL}
     networks:
-      - feature_flags_network
+      - feature-flags-network
 
 networks:
-  feature_flags_network:
-    name: feature_flags_network
+  feature-flags-network:
+    name: feature-flags-network
