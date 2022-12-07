@@ -1,0 +1,25 @@
+apiVersion: skaffold/v4beta1
+kind: Config
+metadata:
+  name: feature-flags
+build:
+  artifacts:
+  - image: thisk8brd/feature-flags-app
+    context: frontend
+    docker:
+      dockerfile: Dockerfile
+  - image: thisk8brd/feature-flags-service
+    context: backend
+    docker:
+      dockerfile: Dockerfile
+manifests:
+  rawYaml:
+  - deployment/feature-flags-app-deployment.yaml
+  - deployment/feature-flags-service-deployment.yaml
+  - deployment/mongo-deployment.yaml
+  - deployment/ingress-controller.yaml
+portForward:
+  - resourceType: service
+    resourceName: feature-flags-app
+    port: 80
+    localPort: 5173

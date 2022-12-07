@@ -1,0 +1,37 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: feature-flags-app
+spec:
+  type: ClusterIP
+  ports:
+    - name: "80"
+      port: 80
+      targetPort: 80
+  selector:
+    app: feature-flags-app
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: feature-flags-app
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: feature-flags-app
+      app: feature-flags-app
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        io.kompose.service: feature-flags-app
+        app: feature-flags-app
+    spec:
+      containers:
+        - image: thisk8brd/feature-flags-app
+          name: feature-flags-app
+          ports:
+            - containerPort: 80
+status: {}
